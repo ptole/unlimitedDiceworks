@@ -1,0 +1,72 @@
+
+  
+  :root {
+    --bg: #0d1117; /* Dark background */
+    --surface: #161b22; /* Dark surface */
+    --border: #30363d; /* Subtle dark border */
+    --border-light: #444c56; /* Lighter dark border */
+    --text: #c9d1d9; /* Light text */
+    --text-muted: #8b949e; /* Muted text */
+    --accent: #58a6ff; /* Ethereal blue accent */
+    --accent-light: #232933; /* Darkened accent for hover/backgrounds */
+    --row-hover: #21262d; /* Subtle hover */
+    --header-bg: #1e2229; /* Darker header background */
+    --shadow: 0 0 20px rgba(88, 166, 255, 0.3); /* Neon glow effect */
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+
+    display: flex; /* Use flexbox for main layout */
+    min-height: 100vh;
+    margin: 0;
+
+    background-image: linear-gradient(rgba(116, 123, 255, .1) .1em, transparent .1em), linear-gradient(90deg, rgba(116, 123, 255, .1) .1em, transparent .1em);
+  background-size: 3em 3em;
+
+
+    
+    display:grid;
+    place-items: center;    
+
+  }
+
+  input{
+    font-size:1.2em;
+  }
+
+  button{
+    font-size:1.2em;
+  }
+  
+  /* Graph Wrapper Styling (New Structure) */
+  .content-box {
+    padding: 5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow); /* Apply the neon glow effect */
+    padding: 10px;
+    min-height: 300px; /* Allow graph to grow if necessary */
+    width: 70vw; /* Slightly less wide */
+    font-size: 1.2em;
+    
+  }
+
+/* Axis labels */
+.dygraph-ylabel { color: var(--text);}
+.dygraph-xlabel { color: var(--text);}
+
+/* Chart title */
+.dygraph-title { color: var(--text); }
+
+/* Legend text */
+.dygraph-legend { color: var(--text); background-color: var(--surface);}
+
+/* Axis tick labels */
+.dygraph-axis-label { color: var(--text);}
