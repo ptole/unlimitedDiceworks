@@ -6,7 +6,7 @@ const averages = document.querySelector("#avgs");
 const medians = document.querySelector("#meds");
 const graphdiv = document.querySelector("#graphdiv");
 
-function parseAverages(r) {
+function parseResults(r) {
     const avgs = []
     const sums = [];
 
@@ -58,6 +58,8 @@ function parseAverages(r) {
     //sum median
     const sumMedian = math.median(sums);
     medians.textContent = `Sum median: ${sumMedian}`;
+
+    createGraphs(r, sums);
 }
 
 function barChartPlotter(e) {
@@ -89,8 +91,33 @@ function barChartPlotter(e) {
     }
 }
 
-function createGraphs(r) {
+function createGraphs(r, sums) {
     graphdiv.innerHTML = "";
+
+    //count sums
+    const countedsums = {};
+    for (const num of sums) {
+        countedsums[num] = countedsums[num] ? countedsums[num] + 1 : 1;
+    }
+    //create sums count graph
+    const sumkeys = Object.keys(countedsums);
+    const sumdata = [];
+    for (let i = 0; i < sumkeys.length; i++) {
+        sumdata.push([parseInt(sumkeys[i]), parseInt(countedsums[sumkeys[i]])]);
+    }
+
+    const sumel = document.createElement("div");
+    graphdiv.appendChild(sumel);
+    let g = new Dygraph(sumel, sumdata, {
+        title: `Results`,
+        xlabel: "Value",
+        ylabel: 'Counts [#]',
+        axisLineColor: '#c9d1d9',
+        axes: { y: { axisLabelWidth: 72 } },
+        plotter: barChartPlotter
+    });
+
+
     //Initialize an array with empty arrays corresponding to how many different rolls the user inputted
     const collated = new Array(r[0][0].length).fill([]);
     //collate all rolls
@@ -110,7 +137,7 @@ function createGraphs(r) {
     }
 
 
-    //Create graphs
+    //Create dice value graphs
     for (let i = 0; i < collated.length; i++) {
         const data = [];
         const keys = Object.keys(counts[i]);
@@ -122,7 +149,7 @@ function createGraphs(r) {
         const e = document.createElement("div");
         graphdiv.appendChild(e);
         let g = new Dygraph(e, data, {
-            title: `Roll ${i + 1}`,
+            title: `Dice values - Roll ${i + 1}`,
             xlabel: "Value",
             ylabel: 'Counts [#]',
             axisLineColor: '#c9d1d9',
@@ -135,6 +162,5 @@ function createGraphs(r) {
 calculateButton.addEventListener("click", () => {
     const seq = parseSyntax(diceInput.value);
     const results = run(seq, 10000)
-    parseAverages(results);
-    createGraphs(results);
+    parseResults(results);
 });
