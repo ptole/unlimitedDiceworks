@@ -103,15 +103,15 @@ function createGraphs(r, sums) {
     const sumkeys = Object.keys(countedsums);
     const sumdata = [];
     for (let i = 0; i < sumkeys.length; i++) {
-        sumdata.push([parseInt(sumkeys[i]), parseInt(countedsums[sumkeys[i]])]);
+        sumdata.push([parseInt(sumkeys[i]), (parseInt(countedsums[sumkeys[i]]) / ITERATIONS) * 100]);
     }
 
     const sumel = document.createElement("div");
     graphdiv.appendChild(sumel);
     let g = new Dygraph(sumel, sumdata, {
         title: `Results`,
-        xlabel: "Value",
-        ylabel: 'Counts [#]',
+        xlabel: "Value [#]",
+        ylabel: 'Percentage [%]',
         axisLineColor: '#c9d1d9',
         axes: { y: { axisLabelWidth: 72 } },
         plotter: barChartPlotter
@@ -141,17 +141,27 @@ function createGraphs(r, sums) {
     for (let i = 0; i < collated.length; i++) {
         const data = [];
         const keys = Object.keys(counts[i]);
+        const totalval = [];
+        //Calculate total value of the 10k dice rolls to get a perentage
+        for (let j = 0; j < keys.length; j++) {
+            totalval.push(parseInt(counts[i][keys[j]]));
+        }
+        const divider = totalval.reduce(
+            (accumulator, currentValue) => accumulator + currentValue,
+            0,
+        );
+
         //Parse counts to dygraphs format
         for (let j = 0; j < keys.length; j++) {
-            data.push([parseInt(keys[j]), parseInt(counts[i][keys[j]])]);
+            data.push([parseInt(keys[j]), (parseInt(counts[i][keys[j]])/divider)*100 ]);
         }
 
         const e = document.createElement("div");
         graphdiv.appendChild(e);
         let g = new Dygraph(e, data, {
             title: `Dice values - Roll ${i + 1}`,
-            xlabel: "Value",
-            ylabel: 'Counts [#]',
+            xlabel: "Value [#]",
+            ylabel: 'Percentage [%]',
             axisLineColor: '#c9d1d9',
             axes: { y: { axisLabelWidth: 72 } },
             plotter: barChartPlotter
@@ -159,8 +169,10 @@ function createGraphs(r, sums) {
     }
 }
 
+const ITERATIONS = 10000;
+
 calculateButton.addEventListener("click", () => {
     const seq = parseSyntax(diceInput.value);
-    const results = run(seq, 10000);
+    const results = run(seq, ITERATIONS);
     parseResults(results);
 });
