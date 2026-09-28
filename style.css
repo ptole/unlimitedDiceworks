@@ -53,9 +53,12 @@
     box-shadow: var(--shadow); /* Apply the neon glow effect */
     padding: 10px;
     min-height: 300px; /* Allow graph to grow if necessary */
-    width: 70vw; /* Slightly less wide */
+    max-width: 70vw; /* Slightly less wide */
     font-size: 1.2em;
     
+  }
+
+  #graphdiv{
   }
 
 /* Axis labels */
