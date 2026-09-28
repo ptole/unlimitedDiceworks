@@ -229,13 +229,14 @@ export function parseSyntax(str) {
  * @returns array of dice results and total sum 
  */
 function runSequence(seqops) {
+    //Separate sequence and add/sub operations from the input array
     const sequence = seqops[0];
     const ops = seqops[1];
 
     let results = [];
     let sum = 0;
 
-    //Assume if there's gonna be a add/sub it's prolly gonna be a addition
+    //First roll is always added to the sum
     let curOP = '+';
 
     for (let i = 0; i < sequence.length; i++) {
@@ -243,15 +244,16 @@ function runSequence(seqops) {
         const s = sequence[i]();
         //if the type of the sequence is a roll, add it to the dice results
         if (s[0] === 'r') {
-            results.push(s[1]);
+            const roll = s[1];
+            results.push(roll);
 
-            for (let j = 0; j < s[1].length; j++) {
+            for (let j = 0; j < roll.length; j++) {
                 //add or subtract from the sum as per what's the next operator
                 if (curOP == '+') {
-                    sum += parseInt(s[1][i]);
+                    sum += parseInt(roll[j]);
                 }
                 else {
-                    sum -= parseInt(s[1][i]);
+                    sum -= parseInt(roll[j]);
                 }
             }
         } else {

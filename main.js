@@ -161,6 +161,6 @@ function createGraphs(r, sums) {
 
 calculateButton.addEventListener("click", () => {
     const seq = parseSyntax(diceInput.value);
-    const results = run(seq, 10000)
+    const results = run(seq, 10000);
     parseResults(results);
 });
