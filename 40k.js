@@ -9,6 +9,28 @@ const devInput = document.querySelector("#dev");
 const susInput = document.querySelector("#sus");
 const fortygraphs = document.querySelector("#fortygraphs");
 
+const hitpercentage = document.querySelector("#hitpercentage");
+const woundpercentage = document.querySelector("#woundpercentage");
+const savepercentage = document.querySelector("#savepercentage");
+const damagepercentage = document.querySelector("#damagepercentage");
+
+const hitrerolls = [
+    document.querySelector("#noHitReroll"),
+    document.querySelector("#onesHitReroll"),
+    document.querySelector("#allHitReroll")
+]
+
+const woundrerolls = [
+    document.querySelector("#noWoundReroll"),
+    document.querySelector("#onesWoundReroll"),
+    document.querySelector("#allWoundReroll")
+]
+
+const savererolls = [
+    document.querySelector("#noSaveReroll"),
+    document.querySelector("#onesSaveReroll"),
+    document.querySelector("#allSaveReroll")
+]
 
 function barChartPlotter(e) {
     var ctx = e.drawingContext;
@@ -39,15 +61,25 @@ function barChartPlotter(e) {
     }
 }
 
-function rollD6(count) {
+function rollD6(count,target,rr) {
     const values = [];
     for (let i = 0; i < count; i++) {
-        values.push(Math.floor(Math.random() * 6) + 1);
+        let result = Math.floor(Math.random() * 6) + 1;
+        if(result <= target){
+            if(rr == 1){
+                if(result == 1){
+                    result = Math.floor(Math.random() * 6) + 1;
+                }
+            }else if(rr == 2){
+                result = Math.floor(Math.random() * 6) + 1;
+            }
+        }
+        values.push(result);
     }
     return values;
 }
 
-function collateData(data){
+function collateData(data) {
     const counted = {};
     for (const num of data) {
         counted[num] = counted[num] ? counted[num] + 1 : 1;
@@ -62,13 +94,28 @@ function collateData(data){
     return result;
 }
 
-function parseResults(results){
+function getSuccesfulDamageInstances(d){
+    const counted = {};
+    for (const num of d) {
+        counted[num] = counted[num] ? counted[num] + 1 : 1;
+    }
+    //create sums count graph
+    const keys = Object.keys(counted);
+    let result = 0;
+    for (let i = 1; i < keys.length; i++) {
+        result += parseInt(counted[keys[i]]);
+    }
+
+    return result;
+}
+
+function parseResults(results) {
     //Get counts of everything and jam em into the object,
     const data = {
-        hit:[],
-        wound:[],
-        save:[],
-        damage:[]
+        hit: [],
+        wound: [],
+        save: [],
+        damage: []
     };
     let allHits = [];
     let allWounds = [];
@@ -76,11 +123,20 @@ function parseResults(results){
     let allDamage = [];
 
     for (let i = 0; i < results.length; i++) {
-        allHits = allHits.concat(results[i].hit);    
+        allHits = allHits.concat(results[i].hit);
         allWounds = allWounds.concat(results[i].wound);
         allSaves = allSaves.concat(results[i].save);
         allDamage.push(results[i].damage);
     }
+
+    //Total roll count
+    const trc = parseInt(diceCount.value) * ITERATIONS;
+    const dmg = getSuccesfulDamageInstances(allDamage);
+
+    hitpercentage.textContent = `${((allWounds.length / trc) * 100).toFixed(1)} %`;
+    woundpercentage.textContent = `${((allSaves.length / trc) * 100).toFixed(1)} %`;
+    savepercentage.textContent = `${((allDamage.length / trc) * 100).toFixed(1)} %`;
+    damagepercentage.textContent = `${((dmg / trc) * 100).toFixed(1)} %`;
 
     data.hit = collateData(allHits);
     data.wound = collateData(allWounds);
@@ -91,7 +147,7 @@ function parseResults(results){
 }
 
 
-function createGraphs(data){
+function createGraphs(data) {
     fortygraphs.innerHTML = '';
 
     const hitgraph = document.createElement('div');
@@ -145,32 +201,18 @@ function createGraphs(data){
     });
 }
 
-
-
-
-document.querySelector("#clearbtn").addEventListener("click", () => {
-    diceCount.value = 10;
-    toHitInput.value = 4;
-    toWoundInput.value = 4;
-    toSvInput.value = 4;
-    hitCrit.value = 6;
-    woundCrit.value = 6;
-    lethalInput.checked = false;
-    devInput.checked = false;
-    susInput.value = 0;
-});
-
+const ITERATIONS = 10000;
 var RUNNING = false;
 const runbtn = document.querySelector("#mathhammer");
 runbtn.addEventListener("click", () => {
-    if(RUNNING){return;}
+    if (RUNNING) { return; }
     RUNNING = true
     const results = performRolls();
     parseResults(results);
     RUNNING = false;
 })
 
-function performRolls(){
+function performRolls() {
     const results = [];
 
     const count = parseInt(diceCount.value);
@@ -183,14 +225,25 @@ function performRolls(){
     const devastating = devInput.checked;
     const sustained = parseInt(susInput.value);
 
-    for (let i = 0; i < 10000; i++) {
-        results.push(performSequence(count,toHit,toCHit,toWound,toCWound,toSave,lethal,devastating,sustained));
+    //rerolls
+    let hRR = 0;
+    let wRR = 0;
+    let sRR = 0;
+
+    for(let i = 0; i<3; i++){
+        if(hitrerolls[i].checked){hRR = i;}
+        if(woundrerolls[i].checked){wRR = i;}
+        if(savererolls[i].checked){sRR = i;}
+    }
+
+    for (let i = 0; i < ITERATIONS; i++) {
+        results.push(performSequence(count, toHit, toCHit, toWound, toCWound, toSave, lethal, devastating, sustained, hRR, wRR, sRR));
     }
 
     return results;
 }
 
-function performSequence(count,toHit,toCHit,toWound,toCWound,toSave,lethal,devastating,sustained) {
+function performSequence(count, toHit, toCHit, toWound, toCWound, toSave, lethal, devastating, sustained, hRR, wRR, sRR) {
     var critHits = 0;
     var hits = [];
     var critWounds = 0;
@@ -203,39 +256,39 @@ function performSequence(count,toHit,toCHit,toWound,toCWound,toSave,lethal,devas
     var rawSaveResults = [];
 
     //Start rolling
-    rawHitResults = rollD6(count);
+    rawHitResults = rollD6(count,toHit,hRR);
     critHits = rawHitResults.filter(x => x == toCHit).length;
-    hits = rawHitResults.filter((value)=> value >= toHit);
+    hits = rawHitResults.filter((value) => value >= toHit);
     //Check sustains and lethals
     var diceToWound = 0;
     var diceToSave = 0;
-    if(sustained > 0){diceToWound += (critHits * sustained);}
-    if(lethal){
+    if (sustained > 0) { diceToWound += (critHits * sustained); }
+    if (lethal) {
         diceToSave += critHits;
         //Filter out crits
-        for(let i = toCHit; i<7; i++){
+        for (let i = toCHit; i < 7; i++) {
             hits = hits.filter(x => x !== i);
         }
     }
     diceToWound += hits.length;
 
     //Roll to wound
-    rawWoundResults = rollD6(diceToWound);
+    rawWoundResults = rollD6(diceToWound,toWound,wRR);
     critWounds = rawWoundResults.filter(x => x == toCWound).length;
-    wounds = rawWoundResults.filter((value)=> value >= toWound);
+    wounds = rawWoundResults.filter((value) => value >= toWound);
     //Check devastating wounds
-    if(devastating){
+    if (devastating) {
         damage += critWounds;
         //Filter out wounds
-        for(let i = toCWound; i<7; i++){
+        for (let i = toCWound; i < 7; i++) {
             wounds = wounds.filter(x => x !== i);
         }
     }
     diceToSave += wounds.length;
     //Roll to save
-    rawSaveResults = rollD6(diceToSave);
-    saveRoll = rawSaveResults.filter((value)=> value < toSave);
+    rawSaveResults = rollD6(diceToSave,toSave,sRR);
+    saveRoll = rawSaveResults.filter((value) => value < toSave);
     damage += saveRoll.length;
 
-    return {hit:rawHitResults, wound: rawWoundResults, save:rawSaveResults, damage:damage}
+    return { hit: rawHitResults, wound: rawWoundResults, save: rawSaveResults, damage: damage }
 }

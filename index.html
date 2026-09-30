@@ -66,12 +66,64 @@
                         <input type="checkbox" id="dev" name="dev" />
                         <label for="dev">Devastating wounds</label>
                     </div>
+                    <br>
+                    <fieldset>
+                        <legend>Rerolls (Hit, Wound, Save)</legend>
+                        <div class="fortyrow">
+                            <input type="radio" id="noHitReroll" name="hitreroll" checked/>
+                            <label for="nohitreroll">None</label>
+
+                            <input type="radio" id="noWoundReroll" name="woundreroll" checked/>
+                            <label for="noWoundreroll">None</label>
+
+                            <input type="radio" id="noSaveReroll" name="savereroll" checked/>
+                            <label for="noSaveReroll">None</label>
+                        </div>
+                        <div class="fortyrow">
+                            <input type="radio" id="onesHitReroll" name="hitreroll"/>
+                            <label for="onesHitReroll">1's</label>
+
+                            <input type="radio" id="onesWoundReroll" name="woundreroll"/>
+                            <label for="onesWoundreroll">1's</label>
+
+                            <input type="radio" id="onesSaveReroll" name="savereroll"/>
+                            <label for="onesSaveReroll">1's</label>
+                        </div>
+                        <div class="fortyrow">
+                            <input type="radio" id="allHitReroll" name="hitreroll"/>
+                            <label for="allHitReroll">All</label>
+
+                            <input type="radio" id="allWoundReroll" name="woundreroll"/>
+                            <label for="allWoundreroll">All</label>
+
+                            <input type="radio" id="allSaveReroll" name="savereroll"/>
+                            <label for="allSaveReroll">All</label>
+                        </div>
+                    </fieldset>
                 </fieldset>
             </div>
             <br><br>
-            <input type="button" value="Clear" id="clearbtn" />
             <input type="button" value="R O L L" id="mathhammer" />
             <br>
+            <div>
+                <h3>Results (% of dice rolled in the beginning)</h3>
+                <div class="fortyrow">
+                    <span>Hits:</span>
+                    <span id="hitpercentage">0%</span>
+                </div>
+                <div class="fortyrow">
+                    <span>Wounds:</span>
+                    <span id="woundpercentage">0%</span>
+                </div>
+                <div class="fortyrow">
+                    <span>Saves:</span>
+                    <span id="savepercentage">0%</span>
+                </div>
+                <div class="fortyrow">
+                    <span>Damage:</span>
+                    <span id="damagepercentage">0%</span>
+                </div>
+            </div>
             <div id="fortygraphs"></div>
         </div>
     </div>
