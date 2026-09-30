@@ -1,75 +1,124 @@
+:root {
+  --bg: #0d1117;
+  /* Dark background */
+  --surface: #161b22;
+  /* Dark surface */
+  --border: #30363d;
+  /* Subtle dark border */
+  --border-light: #444c56;
+  /* Lighter dark border */
+  --text: #c9d1d9;
+  /* Light text */
+  --text-muted: #8b949e;
+  /* Muted text */
+  --accent: #58a6ff;
+  /* Ethereal blue accent */
+  --accent-light: #232933;
+  /* Darkened accent for hover/backgrounds */
+  --row-hover: #21262d;
+  /* Subtle hover */
+  --header-bg: #1e2229;
+  /* Darker header background */
+  --shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+  /* Neon glow effect */
+}
 
-  
-  :root {
-    --bg: #0d1117; /* Dark background */
-    --surface: #161b22; /* Dark surface */
-    --border: #30363d; /* Subtle dark border */
-    --border-light: #444c56; /* Lighter dark border */
-    --text: #c9d1d9; /* Light text */
-    --text-muted: #8b949e; /* Muted text */
-    --accent: #58a6ff; /* Ethereal blue accent */
-    --accent-light: #232933; /* Darkened accent for hover/backgrounds */
-    --row-hover: #21262d; /* Subtle hover */
-    --header-bg: #1e2229; /* Darker header background */
-    --shadow: 0 0 20px rgba(88, 166, 255, 0.3); /* Neon glow effect */
-  }
+* {
+  box-sizing: border-box;
+}
 
-  * {
-    box-sizing: border-box;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
 
-  body {
-    background: var(--bg);
-    color: var(--text);
+  display: flex;
+  /* Use flexbox for main layout */
+  min-height: 100vh;
+  margin: 0;
 
-    display: flex; /* Use flexbox for main layout */
-    min-height: 100vh;
-    margin: 0;
-
-    background-image: linear-gradient(rgba(116, 123, 255, .1) .1em, transparent .1em), linear-gradient(90deg, rgba(116, 123, 255, .1) .1em, transparent .1em);
+  background-image: linear-gradient(rgba(116, 123, 255, .1) .1em, transparent .1em), linear-gradient(90deg, rgba(116, 123, 255, .1) .1em, transparent .1em);
   background-size: 3em 3em;
 
 
-    
-    display:grid;
-    place-items: center;    
 
-  }
 
-  input{
-    font-size:1.2em;
-  }
+  overflow-x: hidden;
+}
 
-  button{
-    font-size:1.2em;
-  }
-  
-  /* Graph Wrapper Styling (New Structure) */
-  .content-box {
-    padding: 5px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: var(--shadow); /* Apply the neon glow effect */
-    padding: 10px;
-    min-height: 300px; /* Allow graph to grow if necessary */
-    max-width: 70vw; /* Slightly less wide */
-    font-size: 1.2em;
-    
-  }
+.container {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
 
-  #graphdiv{
-  }
+input {
+  font-size: 1.2em;
+}
+
+button {
+  font-size: 1.2em;
+}
+
+/* Graph Wrapper Styling (New Structure) */
+.content-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  /* Apply the neon glow effect */
+  padding: 15px;
+  min-height: 300px;
+  /* Allow graph to grow if necessary */
+  max-width: 90vw;
+  /* Slightly less wide */
+  font-size: 1.2em;
+
+}
+
+#fortyk {
+  display: none;
+}
+
+#fortyk .fortyrow {
+  display: flex;
+  justify-content: space-between;
+}
+
+#fortyk input {
+  max-width: 100px;
+}
 
 /* Axis labels */
-.dygraph-ylabel { color: var(--text);}
-.dygraph-xlabel { color: var(--text);}
+.dygraph-ylabel {
+  color: var(--text);
+}
+
+.dygraph-xlabel {
+  color: var(--text);
+}
 
 /* Chart title */
-.dygraph-title { color: var(--text); }
+.dygraph-title {
+  color: var(--text);
+}
 
 /* Legend text */
-.dygraph-legend { color: var(--text); background-color: var(--surface);}
+.dygraph-legend {
+  color: var(--text);
+  background-color: var(--surface);
+}
 
 /* Axis tick labels */
-.dygraph-axis-label { color: var(--text);}
+.dygraph-axis-label {
+  color: var(--text);
+}
+
+#swapbtn {
+  z-index: 10;
+  float: left;
+  top: 0%;
+  left: 0%;
+  display: flex;
+  position: absolute;
+}

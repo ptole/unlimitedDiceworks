@@ -6,6 +6,9 @@ const averages = document.querySelector("#avgs");
 const medians = document.querySelector("#meds");
 const graphdiv = document.querySelector("#graphdiv");
 
+const mainScene = document.querySelector("#general");
+const fortyScene = document.querySelector("#fortyk");
+
 function parseResults(r) {
     const avgs = []
     const sums = [];
@@ -117,6 +120,8 @@ function createGraphs(r, sums) {
         plotter: barChartPlotter
     });
 
+    graphdiv.appendChild(document.createElement('br'));
+
 
     //Initialize an array with empty arrays corresponding to how many different rolls the user inputted
     const collated = new Array(r[0][0].length).fill([]);
@@ -166,13 +171,33 @@ function createGraphs(r, sums) {
             axes: { y: { axisLabelWidth: 72 } },
             plotter: barChartPlotter
         });
+
+        graphdiv.appendChild(document.createElement('br'));
     }
 }
 
 const ITERATIONS = 10000;
+var CURRENTSCENE = "GENERAL";
 
 calculateButton.addEventListener("click", () => {
     const seq = parseSyntax(diceInput.value);
     const results = run(seq, ITERATIONS);
     parseResults(results);
 });
+
+document.querySelector("#swapbtn").addEventListener("click",(e)=>{
+    changeScene();
+});
+
+function changeScene(){
+    if(CURRENTSCENE == "GENERAL"){
+        mainScene.style.display = "none";
+        fortyScene.style.display = "block";
+        CURRENTSCENE = "40K";
+    }else{
+        mainScene.style.display = "block";
+        fortyScene.style.display = "none";
+        CURRENTSCENE = "GENERAL";
+    }
+
+}
